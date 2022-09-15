@@ -51,10 +51,6 @@ class AShooterCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = "Game|Weapon")
 	FRotator GetAimOffsets() const;
 
-
-	UFUNCTION(BlueprintCallable, Category = "Function")
-		float UsingJetpack(bool bIsFlying, float positionY);
-
 	/**
 	* Check if pawn is enemy if given controller.
 	*
@@ -204,6 +200,13 @@ class AShooterCharacter : public ACharacter
 
 	/** player released run action */
 	void OnStopRunning();
+
+	//Player Input for Jetpack
+	void OnStartJetpack();
+	void OnStopJetpack();
+
+	UPROPERTY(VisibleAnywhere, Category = Jetpack)
+		bool bIsJetpakUse;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Reading data
@@ -482,6 +485,9 @@ protected:
 	/** update targeting state */
 	UFUNCTION(reliable, server, WithValidation)
 	void ServerSetRunning(bool bNewRunning, bool bToggle);
+
+	UFUNCTION(reliable, server, WithValidation)
+	virtual void ServerUseJetpack(FVector force);
 
 	/** Builds list of points to check for pausing replication for a connection*/
 	void BuildPauseReplicationCheckPoints(TArray<FVector>& RelevancyCheckPoints);

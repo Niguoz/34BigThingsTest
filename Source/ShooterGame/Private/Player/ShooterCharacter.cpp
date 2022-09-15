@@ -884,6 +884,9 @@ void AShooterCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AShooterCharacter::OnStartRunning);
 	PlayerInputComponent->BindAction("RunToggle", IE_Pressed, this, &AShooterCharacter::OnStartRunningToggle);
 	PlayerInputComponent->BindAction("Run", IE_Released, this, &AShooterCharacter::OnStopRunning);
+
+	PlayerInputComponent->BindAction("Jetpack", IE_Pressed, this, &AShooterCharacter::OnStartJetpack);
+	PlayerInputComponent->BindAction("Jetpack", IE_Released, this, &AShooterCharacter::OnStopJetpack);
 }
 
 
@@ -1325,14 +1328,30 @@ void AShooterCharacter::BuildPauseReplicationCheckPoints(TArray<FVector>& Releva
 	RelevancyCheckPoints.Add(BoundingBox.Max);
 }
 
-float AShooterCharacter::UsingJetpack(bool bIsFlying, float positionY)
+#pragma region Jetpack
+
+void AShooterCharacter::OnStartJetpack()
 {
-	if (bIsFlying)
-	{
-		return positionY + 0.25f;
-	}
-	else
-	{
-		return positionY;
-	}
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Start Jetpack"));
+	bIsJetpakUse = true;
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpakUse? TEXT("True") : TEXT("false")));
 }
+
+void AShooterCharacter::OnStopJetpack()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Stop Jetpack"));
+	bIsJetpakUse = false;
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpakUse ? TEXT("True") : TEXT("false")));
+}
+
+void AShooterCharacter::ServerUseJetpack_Implementation(FVector force)
+{
+	LaunchCharacter(force, false, true);
+}
+
+bool AShooterCharacter::ServerUseJetpack_Validate(FVector force)
+{
+	return true;
+}
+
+#pragma endregion
