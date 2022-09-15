@@ -39,21 +39,28 @@ void UShooterCharacterMovement::PerformMovement(float DeltaTime)
 
 	if (owner)
 	{
-		if (owner->bIsJetpakUse && JetpackFuel > 0)
+		if (owner->bIsJetpackUse)
 		{
 			JetpackFuel -= DeltaTime;
+
+			if (JetpackFuel < 0)
+			{
+				owner->OnStopJetpack();
+			}
+
 			Velocity.Z += JetpackSpeed;
 		}
 		else
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, FString::Printf(TEXT("Fuel %d"), JetpackFuel));
-			JetpackFuel += JetpackRefillRate * DeltaTime;
-			//owner->OnStopJetpack();
+			JetpackFuel += JetpackRefillRate*DeltaTime;
 			if (JetpackFuel >= JetpackMaxFuel)
 			{
 				JetpackFuel = JetpackMaxFuel;
 			}
 		}
+
+		owner->SetJetpackInfo(JetpackSpeed, JetpackMaxFuel, JetpackRefillRate, JetpackFuel);
 	}
 
 	Super::PerformMovement(DeltaTime);

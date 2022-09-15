@@ -71,6 +71,9 @@ AShooterHUD::AShooterHUD(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	HealthBar = UCanvas::MakeIcon(HUDAssets02Texture, 67, 212, 372, 50);
 	HealthBarBg = UCanvas::MakeIcon(HUDAssets02Texture, 67, 162, 372, 50);
 
+	JetpackBar = UCanvas::MakeIcon(HUDAssets02Texture, 67, 0, 441, 81);
+	JetpackBarBg = UCanvas::MakeIcon(HUDAssets02Texture, 67, -60, 441, 81);
+
 	HealthIcon = UCanvas::MakeIcon(HUDAssets02Texture, 78, 262, 28, 28);
 	KillsIcon = UCanvas::MakeIcon(HUDMainTexture, 318, 93, 24, 24);
 	TimerIcon = UCanvas::MakeIcon(HUDMainTexture, 381, 93, 24, 24);
@@ -645,6 +648,7 @@ void AShooterHUD::DrawHUD()
 		{
 			DrawHealth();
 			DrawWeaponHUD();
+			DrawJetpackBar();
 		}
 		else
 		{
@@ -1283,3 +1287,26 @@ float AShooterHUD::DrawRecentlyKilledPlayer()
 }
 
 #undef LOCTEXT_NAMESPACE
+
+
+#pragma region Jetpack
+
+void AShooterHUD::DrawJetpackBar()
+{
+	AShooterCharacter* MyPawn = Cast<AShooterCharacter>(GetOwningPawn());
+	
+	Canvas->SetDrawColor(FColor::Green);
+	const float JetpackPosX = (Canvas->ClipX - (10 + JetpackBarBg.UL) * ScaleUI) / 2;
+	const float JetpackPosY = Canvas->ClipY - (70 + JetpackBarBg.VL) * ScaleUI;
+	Canvas->DrawIcon(JetpackBarBg, JetpackPosX, JetpackPosY, ScaleUI);
+	const float Fuel = FMath::Min(1.0f, MyPawn->JetpackFuel / MyPawn->JetpackMaxFuel);
+
+	FCanvasTileItem TileItem(FVector2D(JetpackPosX, JetpackPosY), JetpackBar.Texture->Resource,
+		FVector2D(JetpackBar.UL * Fuel * ScaleUI, JetpackBar.VL * ScaleUI), FLinearColor::Green);
+	MakeUV(JetpackBar, TileItem.UV0, TileItem.UV1, JetpackBar.U, JetpackBar.V, JetpackBar.UL * Fuel, JetpackBar.VL);
+	TileItem.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TileItem);
+}
+
+#pragma endregion
+

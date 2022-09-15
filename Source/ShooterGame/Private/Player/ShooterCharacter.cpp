@@ -1332,16 +1332,20 @@ void AShooterCharacter::BuildPauseReplicationCheckPoints(TArray<FVector>& Releva
 
 void AShooterCharacter::OnStartJetpack()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Start Jetpack"));
-	bIsJetpakUse = true;
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpakUse? TEXT("True") : TEXT("false")));
+	if (!GetCharacterMovement()->IsMovingOnGround() && GetCharacterMovement()->IsFalling())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Start Jetpack"));
+		bIsJetpackUse = true;
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpackUse ? TEXT("True") : TEXT("false")));
+		UGameplayStatics::PlaySoundAtLocation(this, JetpackSound, GetActorLocation());
+	}
 }
 
 void AShooterCharacter::OnStopJetpack()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Stop Jetpack"));
-	bIsJetpakUse = false;
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpakUse ? TEXT("True") : TEXT("false")));
+	bIsJetpackUse = false;
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpackUse ? TEXT("True") : TEXT("false")));
 }
 
 void AShooterCharacter::ServerUseJetpack_Implementation(FVector force)
@@ -1352,6 +1356,14 @@ void AShooterCharacter::ServerUseJetpack_Implementation(FVector force)
 bool AShooterCharacter::ServerUseJetpack_Validate(FVector force)
 {
 	return true;
+}
+
+void AShooterCharacter::SetJetpackInfo(float speed, float max, float rate, float actualFuel)
+{
+	JetpackSpeed = speed;
+	JetpackMaxFuel = max;
+	JetpackRefillRate = rate;
+	JetpackFuel = actualFuel;
 }
 
 #pragma endregion

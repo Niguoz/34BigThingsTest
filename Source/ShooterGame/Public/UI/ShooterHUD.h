@@ -222,6 +222,12 @@ protected:
 	UPROPERTY()
 	FCanvasIcon HealthIcon;
 
+	// Jetpack bar icon
+	UPROPERTY()
+		FCanvasIcon JetpackBar;
+	UPROPERTY()
+		FCanvasIcon JetpackBarBg;
+
 	/** Kills icon. */
 	UPROPERTY()
 	FCanvasIcon KillsIcon;
@@ -331,6 +337,9 @@ protected:
 
 	/** Draw player's health bar. */
 	void DrawHealth();
+
+	//Player's Jetpack Bar
+	void DrawJetpackBar();
 
 	/** Draws match timer and player position. */
 	void DrawMatchTimerAndPosition();

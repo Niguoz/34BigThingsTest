@@ -204,9 +204,26 @@ class AShooterCharacter : public ACharacter
 	//Player Input for Jetpack
 	void OnStartJetpack();
 	void OnStopJetpack();
+	void SetJetpackInfo(float speed, float max, float rate, float actualFuel);
 
 	UPROPERTY(VisibleAnywhere, Category = Jetpack)
-		bool bIsJetpakUse;
+		bool bIsJetpackUse;
+
+	UPROPERTY(EditDefaultsOnly, Category = Jetpack)
+		USoundCue* JetpackSound;
+
+	UPROPERTY()
+		float JetpackSpeed;
+
+	UPROPERTY()
+		float JetpackMaxFuel;
+
+	UPROPERTY()
+		float JetpackRefillRate;
+
+	UPROPERTY()
+		float JetpackFuel;
+
 
 	//////////////////////////////////////////////////////////////////////////
 	// Reading data
