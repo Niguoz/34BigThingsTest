@@ -52,7 +52,7 @@ void UShooterCharacterMovement::PerformMovement(float DeltaTime)
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, FString::Printf(TEXT("Fuel %d"), JetpackFuel));
+			//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, FString::Printf(TEXT("Fuel %d"), JetpackFuel));
 			JetpackFuel += JetpackRefillRate*DeltaTime;
 			if (JetpackFuel >= JetpackMaxFuel)
 			{
