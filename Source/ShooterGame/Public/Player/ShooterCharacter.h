@@ -225,7 +225,7 @@ class AShooterCharacter : public ACharacter
 		float JetpackFuel;
 
 	UPROPERTY(EditDefaultsOnly, Category = Death)
-		TSubclassOf<AShooterPickup> DeathPickup;
+		TSubclassOf<AActor> DeathPickup;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Reading data

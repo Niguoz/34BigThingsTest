@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Pickups/ShooterPickup_Ammo.h"
+#include "Weapons/ShooterWeapon.h"
 #include "ShooterPickUp_AmmoDeath.generated.h"
 
 /**
@@ -14,7 +15,8 @@ class SHOOTERGAME_API AShooterPickUp_AmmoDeath : public AShooterPickup_Ammo
 {
 	GENERATED_BODY()
 
-	void GetAmmo(const int ammoClip, TSubclassOf<AShooterWeapon> type);
+public:
+	void GetAmmo(const int ammoClip);
 
 	virtual void GivePickupTo(AShooterCharacter* Pawn) override;
 };

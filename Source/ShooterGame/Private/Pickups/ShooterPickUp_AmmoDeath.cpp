@@ -3,10 +3,9 @@
 #include "ShooterGame.h"
 #include "Pickups/ShooterPickUp_AmmoDeath.h"
 
-void AShooterPickUp_AmmoDeath::GetAmmo(const int ammoClip, TSubclassOf<AShooterWeapon> type)
+void AShooterPickUp_AmmoDeath::GetAmmo(const int ammoClip)
 {
 	AmmoClips = ammoClip;
-	WeaponType = type;
 }
 
 void AShooterPickUp_AmmoDeath::GivePickupTo(class AShooterCharacter* Pawn)

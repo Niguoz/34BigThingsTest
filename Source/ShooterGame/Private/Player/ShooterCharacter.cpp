@@ -8,6 +8,7 @@
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
 #include "Sound/SoundNodeLocalPlayer.h"
+#include "Pickups/ShooterPickup_AmmoDeath.h"
 #include "AudioThread.h"
 
 static int32 NetVisualizeRelevancyTestPoints = 0;
@@ -370,6 +371,15 @@ void AShooterCharacter::OnDeath(float KillingDamage, struct FDamageEvent const& 
 
 	// switch back to 3rd person view
 	UpdatePawnMeshes();
+
+	const FVector location = GetActorLocation();
+	const FRotator rotation = GetActorRotation();
+
+	//AActor* PickUp = GetWorld()->SpawnActor<AActor>(DeathPickup,location, rotation);
+	AShooterPickUp_AmmoDeath* PickUpDeath = Cast<AShooterPickUp_AmmoDeath>(DeathPickup->GetClass());
+	PickUpDeath = GetWorld()->SpawnActor<AShooterPickUp_AmmoDeath>(DeathPickup, location, rotation);
+	PickUpDeath->GetAmmo(CurrentWeapon->GetCurrentAmmoInClip());
+
 
 	DetachFromControllerPendingDestroy();
 	StopAllAnimMontages();
