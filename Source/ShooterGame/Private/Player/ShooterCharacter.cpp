@@ -375,10 +375,19 @@ void AShooterCharacter::OnDeath(float KillingDamage, struct FDamageEvent const& 
 	const FVector location = GetActorLocation();
 	const FRotator rotation = GetActorRotation();
 
-	//AActor* PickUp = GetWorld()->SpawnActor<AActor>(DeathPickup,location, rotation);
-	AShooterPickUp_AmmoDeath* PickUpDeath = Cast<AShooterPickUp_AmmoDeath>(DeathPickup->GetClass());
-	PickUpDeath = GetWorld()->SpawnActor<AShooterPickUp_AmmoDeath>(DeathPickup, location, rotation);
-	PickUpDeath->GetAmmo(CurrentWeapon->GetCurrentAmmoInClip());
+	if (CurrentWeapon->GetAmmoType() == AShooterWeapon::EAmmoType::EBullet){
+
+		//AActor* PickUp = GetWorld()->SpawnActor<AActor>(DeathPickup,location, rotation);
+		AShooterPickUp_AmmoDeath* PickUpDeath = Cast<AShooterPickUp_AmmoDeath>(DeathPickup->GetClass());
+		PickUpDeath = GetWorld()->SpawnActor<AShooterPickUp_AmmoDeath>(DeathPickup, location, rotation);
+		PickUpDeath->GetAmmo(CurrentWeapon->GetCurrentAmmoInClip(), CurrentWeapon);
+	}
+	else
+	{
+		AShooterPickUp_AmmoDeath* PickUpDeath = Cast<AShooterPickUp_AmmoDeath>(DeathLauncherPickup->GetClass());
+		PickUpDeath = GetWorld()->SpawnActor<AShooterPickUp_AmmoDeath>(DeathLauncherPickup, location, rotation);
+		PickUpDeath->GetAmmo(CurrentWeapon->GetCurrentAmmoInClip(), CurrentWeapon);
+	}
 
 
 	DetachFromControllerPendingDestroy();

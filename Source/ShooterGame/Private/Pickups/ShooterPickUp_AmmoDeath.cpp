@@ -3,7 +3,7 @@
 #include "ShooterGame.h"
 #include "Pickups/ShooterPickUp_AmmoDeath.h"
 
-void AShooterPickUp_AmmoDeath::GetAmmo(const int ammoClip)
+void AShooterPickUp_AmmoDeath::GetAmmo( int ammoClip, AShooterWeapon* weapon)
 {
 	AmmoClips = ammoClip;
 }

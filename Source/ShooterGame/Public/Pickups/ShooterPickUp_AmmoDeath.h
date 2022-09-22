@@ -16,7 +16,7 @@ class SHOOTERGAME_API AShooterPickUp_AmmoDeath : public AShooterPickup_Ammo
 	GENERATED_BODY()
 
 public:
-	void GetAmmo(const int ammoClip);
+	void GetAmmo(int ammoClip, AShooterWeapon* weapon);
 
 	virtual void GivePickupTo(AShooterCharacter* Pawn) override;
 };

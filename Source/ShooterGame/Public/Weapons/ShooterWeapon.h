@@ -104,6 +104,7 @@ class AShooterWeapon : public AActor
 	//////////////////////////////////////////////////////////////////////////
 	// Ammo
 	
+public:
 	enum class EAmmoType
 	{
 		EBullet,

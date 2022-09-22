@@ -227,6 +227,9 @@ class AShooterCharacter : public ACharacter
 	UPROPERTY(EditDefaultsOnly, Category = Death)
 		TSubclassOf<AActor> DeathPickup;
 
+	UPROPERTY(EditDefaultsOnly, Category = Death)
+		TSubclassOf<AActor> DeathLauncherPickup;
+
 	//////////////////////////////////////////////////////////////////////////
 	// Reading data
 
