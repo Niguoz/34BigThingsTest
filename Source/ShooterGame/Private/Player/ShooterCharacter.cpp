@@ -1199,8 +1199,10 @@ void AShooterCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > &
 	// everyone except local owner: flag change is locally instigated
 	DOREPLIFETIME_CONDITION(AShooterCharacter, bIsTargeting, COND_SkipOwner);
 	DOREPLIFETIME_CONDITION(AShooterCharacter, bWantsToRun, COND_SkipOwner);
+	DOREPLIFETIME_CONDITION(AShooterCharacter, bIsJetpackUse, COND_SkipOwner);
 
 	DOREPLIFETIME_CONDITION(AShooterCharacter, LastTakeHitInfo, COND_Custom);
+
 
 	// everyone
 	DOREPLIFETIME(AShooterCharacter, CurrentWeapon);
@@ -1344,6 +1346,11 @@ void AShooterCharacter::OnStartJetpack()
 {
 	if (!GetCharacterMovement()->IsMovingOnGround() && GetCharacterMovement()->IsFalling())
 	{
+		if (GetLocalRole() != ROLE_Authority)
+		{
+			ServerSetJetpack(true);
+		}
+
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Start Jetpack"));
 		bIsJetpackUse = true;
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpackUse ? TEXT("True") : TEXT("false")));
@@ -1353,6 +1360,11 @@ void AShooterCharacter::OnStartJetpack()
 
 void AShooterCharacter::OnStopJetpack()
 {
+	if (GetLocalRole() != ROLE_Authority)
+	{
+		ServerSetJetpack(false);
+	}
+
 	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Stop Jetpack"));
 	bIsJetpackUse = false;
 	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpackUse ? TEXT("True") : TEXT("false")));
@@ -1364,6 +1376,16 @@ void AShooterCharacter::ServerUseJetpack_Implementation(FVector force)
 }
 
 bool AShooterCharacter::ServerUseJetpack_Validate(FVector force)
+{
+	return true;
+}
+
+void AShooterCharacter::ServerSetJetpack_Implementation(bool bJetpackUse)
+{
+	bIsJetpackUse = bJetpackUse;
+}
+
+bool AShooterCharacter::ServerSetJetpack_Validate(bool bJetpackUse)
 {
 	return true;
 }

@@ -206,7 +206,7 @@ class AShooterCharacter : public ACharacter
 	void OnStopJetpack();
 	void SetJetpackInfo(float speed, float max, float rate, float actualFuel);
 
-	UPROPERTY(VisibleAnywhere, Category = Jetpack)
+	UPROPERTY(VisibleAnywhere, Category = Jetpack, Replicated)
 		bool bIsJetpackUse;
 
 	UPROPERTY(EditDefaultsOnly, Category = Jetpack)
@@ -507,6 +507,9 @@ protected:
 
 	UFUNCTION(reliable, server, WithValidation)
 	virtual void ServerUseJetpack(FVector force);
+
+	UFUNCTION(reliable, server, WithValidation)
+		virtual void ServerSetJetpack(bool bJetpackUse);
 
 	/** Builds list of points to check for pausing replication for a connection*/
 	void BuildPauseReplicationCheckPoints(TArray<FVector>& RelevancyCheckPoints);
