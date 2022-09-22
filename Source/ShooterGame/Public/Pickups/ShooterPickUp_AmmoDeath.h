@@ -18,5 +18,11 @@ class SHOOTERGAME_API AShooterPickUp_AmmoDeath : public AShooterPickup_Ammo
 public:
 	void GetAmmo(int ammoClip, AShooterWeapon* weapon);
 
+	UFUNCTION(BlueprintCallable)
+	void DestroyAmmo(float DeltaTime);
+
+	UPROPERTY(EditAnywhere, Category = Pickup)
+		float LifeTime;
+
 	virtual void GivePickupTo(AShooterCharacter* Pawn) override;
 };
