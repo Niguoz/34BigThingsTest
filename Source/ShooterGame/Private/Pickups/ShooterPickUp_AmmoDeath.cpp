@@ -10,7 +10,7 @@ void AShooterPickUp_AmmoDeath::GetAmmo( int ammoClip, AShooterWeapon* weapon)
 
 void AShooterPickUp_AmmoDeath::GivePickupTo(class AShooterCharacter* Pawn)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Yellow, FString::Printf(TEXT("Clips: %d for " ), AmmoClips));
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Yellow, FString::Printf(TEXT("Clips: %d for " ), AmmoClips));
 	
 	Super::GivePickupTo(Pawn);
 

@@ -380,13 +380,13 @@ void AShooterCharacter::OnDeath(float KillingDamage, struct FDamageEvent const& 
 		//AActor* PickUp = GetWorld()->SpawnActor<AActor>(DeathPickup,location, rotation);
 		AShooterPickUp_AmmoDeath* PickUpDeath = Cast<AShooterPickUp_AmmoDeath>(DeathPickup->GetClass());
 		PickUpDeath = GetWorld()->SpawnActor<AShooterPickUp_AmmoDeath>(DeathPickup, location, rotation);
-		PickUpDeath->GetAmmo(CurrentWeapon->GetCurrentAmmoInClip(), CurrentWeapon);
+		PickUpDeath->GetAmmo(CurrentWeapon->GetCurrentAmmo(), CurrentWeapon);
 	}
 	else
 	{
 		AShooterPickUp_AmmoDeath* PickUpDeath = Cast<AShooterPickUp_AmmoDeath>(DeathLauncherPickup->GetClass());
 		PickUpDeath = GetWorld()->SpawnActor<AShooterPickUp_AmmoDeath>(DeathLauncherPickup, location, rotation);
-		PickUpDeath->GetAmmo(CurrentWeapon->GetCurrentAmmoInClip(), CurrentWeapon);
+		PickUpDeath->GetAmmo(CurrentWeapon->GetCurrentAmmo(), CurrentWeapon);
 	}
 
 
