@@ -2,6 +2,7 @@
 
 #include "ShooterGame.h"
 #include "Weapons/ShooterWeapon_Instant.h"
+#include <ShooterDamageType.h>
 #include "Particles/ParticleSystemComponent.h"
 #include "Effects/ShooterImpactEffect.h"
 
@@ -208,6 +209,9 @@ void AShooterWeapon_Instant::DealDamage(const FHitResult& Impact, const FVector&
 	PointDmg.HitInfo = Impact;
 	PointDmg.ShotDirection = ShootDir;
 	PointDmg.Damage = InstantConfig.HitDamage;
+
+	UShooterDamageType* type = Cast<UShooterDamageType>(InstantConfig.DamageType);
+	bool freeze = type->GetCanFreeze();
 
 	Impact.GetActor()->TakeDamage(PointDmg.Damage, PointDmg, MyPawn->Controller, this);
 }

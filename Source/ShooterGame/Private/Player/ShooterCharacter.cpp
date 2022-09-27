@@ -272,6 +272,14 @@ float AShooterCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dam
 	AShooterGameMode* const Game = GetWorld()->GetAuthGameMode<AShooterGameMode>();
 	Damage = Game ? Game->ModifyDamage(Damage, this, DamageEvent, EventInstigator, DamageCauser) : 0.f;
 
+	UShooterDamageType* type = Cast<UShooterDamageType>(DamageEvent.DamageTypeClass);
+	bool freeze = type->GetCanFreeze();
+
+	if (freeze)
+	{
+		bIsFreeze = true;
+	}
+
 	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	if (ActualDamage > 0.f)
 	{
@@ -1374,9 +1382,9 @@ void AShooterCharacter::OnStopJetpack()
 		ServerSetJetpack(false);
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Stop Jetpack"));
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Stop Jetpack"));
 	bIsJetpackUse = false;
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpackUse ? TEXT("True") : TEXT("false")));
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpackUse ? TEXT("True") : TEXT("false")));
 }
 
 void AShooterCharacter::ServerUseJetpack_Implementation(FVector force)
@@ -1408,3 +1416,23 @@ void AShooterCharacter::SetJetpackInfo(float speed, float max, float rate, float
 }
 
 #pragma endregion
+
+void AShooterCharacter::FreezeEffect(float DeltaTime)
+{
+	float time = FreezeTime;
+	if (bIsFreeze)
+	{
+		time -= DeltaTime;
+
+		if (time <= 0)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("freeze"));
+			GetCharacterMovement()->SetActive(true);
+			bIsFreeze = false;
+		}
+		else
+		{
+			GetCharacterMovement()->SetActive(false);
+		}
+	}
+}

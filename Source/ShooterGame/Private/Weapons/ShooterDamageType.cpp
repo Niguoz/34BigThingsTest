@@ -6,3 +6,8 @@
 UShooterDamageType::UShooterDamageType(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 }
+
+bool UShooterDamageType::GetCanFreeze()
+{
+	return bCanFreeze;
+}

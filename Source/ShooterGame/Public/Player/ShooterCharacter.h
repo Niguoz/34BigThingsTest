@@ -230,6 +230,15 @@ class AShooterCharacter : public ACharacter
 	UPROPERTY(EditDefaultsOnly, Category = Death)
 		TSubclassOf<AActor> DeathLauncherPickup;
 
+	UPROPERTY(VisibleAnywhere, Category = Freeze)
+		bool bIsFreeze;
+
+	UPROPERTY(EditDefaultsOnly, Category = Freeze)
+		float FreezeTime;
+	
+	UFUNCTION(BlueprintCallable)
+	void FreezeEffect(float DeltaTime);
+
 	//////////////////////////////////////////////////////////////////////////
 	// Reading data
 
