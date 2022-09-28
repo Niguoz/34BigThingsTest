@@ -210,8 +210,8 @@ void AShooterWeapon_Instant::DealDamage(const FHitResult& Impact, const FVector&
 	PointDmg.ShotDirection = ShootDir;
 	PointDmg.Damage = InstantConfig.HitDamage;
 
-	UShooterDamageType* type = Cast<UShooterDamageType>(InstantConfig.DamageType);
-	bool freeze = type->GetCanFreeze();
+	//UShooterDamageType* type = Cast<UShooterDamageType>(InstantConfig.DamageType);
+	//bool freeze = type->GetCanFreeze();
 
 	Impact.GetActor()->TakeDamage(PointDmg.Damage, PointDmg, MyPawn->Controller, this);
 }

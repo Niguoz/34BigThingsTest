@@ -24,10 +24,10 @@ class UShooterDamageType : public UDamageType
 
 public:
 	UPROPERTY(EditAnywhere, Category = Effects)
-		bool bCanFreeze;
+		bool bFreezeProj;
 
-	UFUNCTION()
-		bool GetCanFreeze();
+	/*UFUNCTION()
+		bool GetCanFreeze();*/
 };
 
 

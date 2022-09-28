@@ -5,9 +5,10 @@
 
 UShooterDamageType::UShooterDamageType(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
+	Super::bCanFreeze = bFreezeProj;
 }
 
-bool UShooterDamageType::GetCanFreeze()
+/*bool UShooterDamageType::GetCanFreeze()
 {
 	return bCanFreeze;
-}
+}*/

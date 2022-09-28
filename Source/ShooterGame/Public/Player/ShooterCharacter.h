@@ -235,7 +235,10 @@ class AShooterCharacter : public ACharacter
 
 	UPROPERTY(EditDefaultsOnly, Category = Freeze)
 		float FreezeTime;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = Freeze)
+		float MaxFreezeTime;
+
 	UFUNCTION(BlueprintCallable)
 	void FreezeEffect(float DeltaTime);
 

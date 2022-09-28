@@ -272,13 +272,14 @@ float AShooterCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dam
 	AShooterGameMode* const Game = GetWorld()->GetAuthGameMode<AShooterGameMode>();
 	Damage = Game ? Game->ModifyDamage(Damage, this, DamageEvent, EventInstigator, DamageCauser) : 0.f;
 
-	UShooterDamageType* type = Cast<UShooterDamageType>(DamageEvent.DamageTypeClass);
-	bool freeze = type->GetCanFreeze();
+	//UShooterDamageType* type = Cast<UShooterDamageType>(DamageEvent.DamageTypeClass);
+	//bool freeze = type->GetCanFreeze();
+	//UDamageType* type = Cast<UDamageType>(DamageEvent.DamageTypeClass);
 
-	if (freeze)
-	{
-		bIsFreeze = true;
-	}
+	//if (!bIsFreeze )
+	//{
+		//bIsFreeze = true;
+	//}
 
 	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	if (ActualDamage > 0.f)
@@ -447,6 +448,11 @@ void AShooterCharacter::OnDeath(float KillingDamage, struct FDamageEvent const& 
 
 void AShooterCharacter::PlayHit(float DamageTaken, struct FDamageEvent const& DamageEvent, class APawn* PawnInstigator, class AActor* DamageCauser)
 {
+	if (!bIsFreeze)
+	{
+		bIsFreeze = true;
+	}
+
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		ReplicateHit(DamageTaken, DamageEvent, PawnInstigator, DamageCauser, false);
@@ -556,6 +562,8 @@ void AShooterCharacter::ReplicateHit(float Damage, struct FDamageEvent const& Da
 	LastTakeHitInfo.EnsureReplication();
 
 	LastTakeHitTimeTimeout = TimeoutTime;
+
+	
 }
 
 void AShooterCharacter::OnRep_LastTakeHitInfo()
@@ -1164,6 +1172,8 @@ void AShooterCharacter::Tick(float DeltaSeconds)
 			DrawDebugSphere(GetWorld(), PointToTest, 10.0f, 8, FColor::Red);
 		}
 	}
+
+	FreezeEffect(DeltaSeconds);
 }
 
 void AShooterCharacter::BeginDestroy()
@@ -1419,20 +1429,24 @@ void AShooterCharacter::SetJetpackInfo(float speed, float max, float rate, float
 
 void AShooterCharacter::FreezeEffect(float DeltaTime)
 {
-	float time = FreezeTime;
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsFreeze ? TEXT("True") : TEXT("false")));
+
 	if (bIsFreeze)
 	{
-		time -= DeltaTime;
+		FreezeTime -= DeltaTime;
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, FString::Printf(TEXT("Freeze %f"), FreezeTime));
 
-		if (time <= 0)
+		if (FreezeTime < 0)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("freeze"));
-			GetCharacterMovement()->SetActive(true);
+			//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, FString::Printf(TEXT("Fuel %d"), FreezeTime));
+			//GetCharacterMovement()->SetActive(true);
+			FreezeTime = MaxFreezeTime;
 			bIsFreeze = false;
 		}
 		else
 		{
-			GetCharacterMovement()->SetActive(false);
+			//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, FString::Printf(TEXT("Fuel %d"), FreezeTime));
+			//GetCharacterMovement()->SetActive(false);
 		}
 	}
 }
