@@ -242,6 +242,9 @@ class AShooterCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable)
 	void FreezeEffect(float DeltaTime);
 
+	void OnStartFreeze();
+	void OnStopFreeze();
+
 	//////////////////////////////////////////////////////////////////////////
 	// Reading data
 
@@ -525,6 +528,9 @@ protected:
 
 	UFUNCTION(reliable, server, WithValidation)
 		virtual void ServerSetJetpack(bool bJetpackUse);
+
+	UFUNCTION(reliable, server, WithValidation)
+		virtual void ServerSetFreeze(bool bFreeze);
 
 	/** Builds list of points to check for pausing replication for a connection*/
 	void BuildPauseReplicationCheckPoints(TArray<FVector>& RelevancyCheckPoints);

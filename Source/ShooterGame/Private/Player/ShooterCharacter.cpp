@@ -281,6 +281,8 @@ float AShooterCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dam
 		//bIsFreeze = true;
 	//}
 
+	OnStartFreeze();
+
 	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	if (ActualDamage > 0.f)
 	{
@@ -293,6 +295,11 @@ float AShooterCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dam
 		{
 			PlayHit(ActualDamage, DamageEvent, EventInstigator ? EventInstigator->GetPawn() : NULL, DamageCauser);
 		}
+
+		//if (!bIsFreeze)
+		//{
+		//	bIsFreeze = true;
+		//}
 
 		MakeNoise(1.0f, EventInstigator ? EventInstigator->GetPawn() : this);
 	}
@@ -448,10 +455,7 @@ void AShooterCharacter::OnDeath(float KillingDamage, struct FDamageEvent const& 
 
 void AShooterCharacter::PlayHit(float DamageTaken, struct FDamageEvent const& DamageEvent, class APawn* PawnInstigator, class AActor* DamageCauser)
 {
-	if (!bIsFreeze)
-	{
-		bIsFreeze = true;
-	}
+	
 
 	if (GetLocalRole() == ROLE_Authority)
 	{
@@ -491,6 +495,7 @@ void AShooterCharacter::PlayHit(float DamageTaken, struct FDamageEvent const& Da
 		{
 			InstigatorHUD->NotifyEnemyHit();
 		}
+
 	}
 }
 
@@ -1427,6 +1432,16 @@ void AShooterCharacter::SetJetpackInfo(float speed, float max, float rate, float
 
 #pragma endregion
 
+void AShooterCharacter::ServerSetFreeze_Implementation(bool bFreeze)
+{
+	bIsFreeze = bFreeze;
+}
+
+bool AShooterCharacter::ServerSetFreeze_Validate(bool bFreeze)
+{
+	return true;
+}
+
 void AShooterCharacter::FreezeEffect(float DeltaTime)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsFreeze ? TEXT("True") : TEXT("false")));
@@ -1439,14 +1454,38 @@ void AShooterCharacter::FreezeEffect(float DeltaTime)
 		if (FreezeTime < 0)
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, FString::Printf(TEXT("Fuel %d"), FreezeTime));
-			//GetCharacterMovement()->SetActive(true);
+			GetCharacterMovement()->SetActive(true);
 			FreezeTime = MaxFreezeTime;
-			bIsFreeze = false;
+			OnStopFreeze();
 		}
 		else
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, FString::Printf(TEXT("Fuel %d"), FreezeTime));
-			//GetCharacterMovement()->SetActive(false);
+			GetCharacterMovement()->SetActive(false);
 		}
 	}
 }
+
+void AShooterCharacter::OnStartFreeze()
+{
+	if (GetLocalRole() != ROLE_Authority)
+	{
+		ServerSetFreeze(true);
+	}
+
+	bIsFreeze = true;
+	
+}
+
+void AShooterCharacter::OnStopFreeze()
+{
+	if (GetLocalRole() != ROLE_Authority)
+	{
+		ServerSetFreeze(false);
+	}
+
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Stop Jetpack"));
+	bIsFreeze = false;
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("Bool: %s"), bIsJetpackUse ? TEXT("True") : TEXT("false")));
+}
+
